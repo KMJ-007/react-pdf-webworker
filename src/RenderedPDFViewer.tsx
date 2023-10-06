@@ -4,11 +4,10 @@ import { useRenderPDF } from './useRenderPDF';
 
 export const RenderedPDFViewer: FC<
   Omit<ComponentProps<typeof PDFViewerRenderer>, 'children'> & {
-    text: string;
+    data: string;
   }
-> = ({ style, className, text: outerText, innerRef, showToolbar = true, ...props }) => {
-  const text = useDeferredValue(outerText);
-  const { url, loading, error } = useRenderPDF({ text });
+> = ({ style, className, data, innerRef, showToolbar = true, ...props }) => {
+  const { url, loading, error } = useRenderPDF({ data });
 
   const src = url ? `${url}#toolbar=${showToolbar ? 1 : 0}` : null;
   if (loading)

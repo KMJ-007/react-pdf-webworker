@@ -9,7 +9,7 @@ import Worker from './workers/pdf.worker?worker';
 export const pdfWorker = wrap<WorkerType>(new Worker());
 pdfWorker.onProgress(proxy((info: any) => console.log(info)));
 
-export const useRenderPDF = ({ text }: Parameters<WorkerType['renderPDFInWorker']>[0]) =>
+export const useRenderPDF = ({ data }: Parameters<WorkerType['renderPDFInWorker']>[0]) =>
 
 {
   const {
@@ -17,8 +17,8 @@ export const useRenderPDF = ({ text }: Parameters<WorkerType['renderPDFInWorker'
     loading,
     error,
   } = useAsync(async () => {
-    return pdfWorker.renderPDFInWorker({ text });
-  }, [text]);
+    return pdfWorker.renderPDFInWorker({ data });
+  }, [data]);
 
   useEffect(() => (url ? () => URL.revokeObjectURL(url) : undefined), [url]);
   return { url, loading, error };
