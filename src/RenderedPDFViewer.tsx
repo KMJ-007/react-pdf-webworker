@@ -1,5 +1,5 @@
 import { PDFViewer as PDFViewerRenderer } from '@react-pdf/renderer';
-import { ComponentProps, FC, useDeferredValue } from 'react';
+import { ComponentProps, FC, useDeferredValue, useEffect, useState } from 'react';
 import { useRenderPDF } from './useRenderPDF';
 
 export const RenderedPDFViewer: FC<
@@ -9,7 +9,18 @@ export const RenderedPDFViewer: FC<
 > = ({ style, className, data, innerRef, showToolbar = true, ...props }) => {
   const { url, loading, error } = useRenderPDF({ data });
 
+  let start = Date.now();
   const src = url ? `${url}#toolbar=${showToolbar ? 1 : 0}` : null;
+
+  useEffect(() => {
+    console.log({loading,error,src})
+    if (!loading && !error && src !== null) {
+      // Display the alert only once when the PDF is loaded for the first time
+      alert(`Time taken ${(Date.now() - start) } ms`);
+
+    }
+  }, [loading, error, src, data]);
+
   if (loading)
     return (
       // @ts-ignore
@@ -27,9 +38,10 @@ export const RenderedPDFViewer: FC<
       </div>
     );
   }
-
+  
   return (
-    <iframe
+    <div>
+      <iframe
       // @ts-ignore
       src={src}
       ref={innerRef}
@@ -37,6 +49,7 @@ export const RenderedPDFViewer: FC<
       style={style}
       className={className}
       {...props}
-    />
+      />
+    </div>
   );
 };
